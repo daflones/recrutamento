@@ -503,23 +503,18 @@ export default function FsocietyAdminPage() {
             </div>
             <div>
               <span className="font-mono-code text-[10px] uppercase tracking-widest text-purple-400 block">
-                ROOT ACCESS // FSOCIETY00.DAT
+                RESTRICTED // FSOCIETY00.DAT
               </span>
               <h1 className="font-hacker text-xl sm:text-2xl font-bold text-white">
-                PAINEL DE COMANDO ADMIN
+                TERMINAL DE AUTENTICAÇÃO
               </h1>
             </div>
           </div>
 
-          <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
-            Entre com a <strong className="text-zinc-200">Chave Mestre de Operador</strong> (padrão:{" "}
-            <code className="text-purple-300">fsociety00.dat</code>) ou com o e-mail e senha da sua conta Admin.
-          </p>
-
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
               <label className="block text-xs font-mono-code uppercase text-zinc-400 mb-1.5">
-                E-mail Admin (Opcional se usar Chave Mestre)
+                Identificador (Opcional)
               </label>
               <input
                 type="email"
@@ -527,7 +522,7 @@ export default function FsocietyAdminPage() {
                 autoCapitalize="none"
                 value={loginEmail}
                 onChange={(e) => setLoginEmail(e.target.value)}
-                placeholder="admin@fsociety.dev (opcional)"
+                placeholder="Operador"
                 className="w-full min-h-[46px] rounded-xl bg-zinc-950 border border-zinc-800 px-4 py-2.5 text-sm text-white placeholder-zinc-600 focus:border-purple-500 focus:outline-none"
               />
             </div>
@@ -535,14 +530,14 @@ export default function FsocietyAdminPage() {
             <div>
               <label className="block text-xs font-mono-code uppercase text-zinc-300 mb-1.5 flex items-center gap-1.5">
                 <KeyRound className="w-3.5 h-3.5 text-purple-400" />
-                Chave Mestre / Senha Admin *
+                Chave de Acesso *
               </label>
               <input
                 type="password"
                 required
                 value={loginPassword}
                 onChange={(e) => setLoginPassword(e.target.value)}
-                placeholder="Digite a chave de comando..."
+                placeholder="••••••••••••"
                 className="w-full min-h-[46px] rounded-xl bg-zinc-950 border border-zinc-800 px-4 py-2.5 text-sm text-white placeholder-zinc-600 focus:border-purple-500 focus:outline-none font-mono-code"
               />
             </div>

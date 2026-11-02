@@ -910,13 +910,6 @@ export default function FsocietyRecruitmentPage() {
             </div>
             <div className="flex items-center gap-3">
               <span>INSCRIÇÕES ATÉ {deadlineLabel} • {totalSpots} VAGAS</span>
-              <a
-                href="/admin"
-                className="text-zinc-700 hover:text-purple-400 transition"
-                title="Painel de Comando Admin"
-              >
-                [root@admin]
-              </a>
             </div>
           </div>
         </div>
