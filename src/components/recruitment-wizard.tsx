@@ -9,7 +9,6 @@ import {
   ChevronRight,
   Copy,
   Cpu,
-  CreditCard,
   ExternalLink,
   Headphones,
   Laptop,
@@ -166,7 +165,6 @@ export function RecruitmentWizard({
   const deadlineLabel = config?.deadlineLabel ?? "10/11";
   const discordInvite = config?.discordUrl || DEFAULT_DISCORD_INVITE;
   const pixEnabled = config?.pixEnabled ?? true;
-  const cardEnabled = config?.cardEnabled ?? true;
   const recruitmentOpen = config?.recruitmentOpen ?? true;
 
   const [step, setStep] = useState(1);
@@ -207,13 +205,7 @@ export function RecruitmentWizard({
 
     if (appId || ref) {
       setStep(5);
-      if (statusParam === "cancelado") {
-        setReturnBanner(
-          "O checkout em cartão foi cancelado. Você pode tentar novamente ou gerar um PIX instantâneo abaixo.",
-        );
-      } else {
-        setReturnBanner("Verificando confirmação do seu pagamento junto ao provedor...");
-      }
+      setReturnBanner("Verificando confirmação do seu pagamento PIX...");
       void verifyPaymentStatus(appId || "", ref || "");
     }
   }, []);
@@ -433,10 +425,6 @@ export function RecruitmentWizard({
       if (data.alreadyPaid || data.status === "paid") {
         setPaymentConfirmed(true);
         return;
-      }
-
-      if (methodToUse === "card" && data.checkoutUrl) {
-        window.location.href = data.checkoutUrl;
       }
     } catch (err) {
       setError(
@@ -1183,94 +1171,43 @@ export function RecruitmentWizard({
                   </div>
                 </div>
 
-                {/* Escolha do método: PIX (MercosulPay) ou Cartão (Mercado Pago) */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
-                  {pixEnabled && (
-                    <button
-                      type="button"
-                      disabled={submitting}
-                      onClick={() => void handleGeneratePayment("pix")}
-                      className={`p-4 sm:p-5 rounded-xl border text-left transition flex flex-col justify-between cursor-pointer ${
-                        state.paymentMethod === "pix"
-                          ? "border-emerald-500 bg-emerald-950/20 shadow-[0_0_25px_rgba(16,185,129,0.15)]"
-                          : "border-zinc-800 bg-zinc-900/50 hover:border-zinc-700"
-                      }`}
-                    >
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="flex items-center gap-3">
-                          <div className="p-2.5 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                            <QrCode className="w-6 h-6" />
-                          </div>
-                          <div>
-                            <span className="inline-block text-[10px] font-mono-code uppercase px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 mb-1">
-                              MERCOSULPAY // INSTANTÂNEO
-                            </span>
-                            <h4 className="text-sm sm:text-base font-bold text-white">
-                              Pagar {signalFormatted} via PIX
-                            </h4>
-                          </div>
-                        </div>
+                {/* Pagamento Único via PIX (MercosulPay) */}
+                {pixEnabled && !checkoutData?.qrCode && (
+                  <button
+                    type="button"
+                    disabled={submitting}
+                    onClick={() => void handleGeneratePayment("pix")}
+                    className="w-full p-5 sm:p-6 rounded-2xl border border-emerald-500 bg-emerald-950/20 hover:bg-emerald-950/30 shadow-[0_0_30px_rgba(16,185,129,0.18)] text-left transition flex flex-col sm:flex-row sm:items-center justify-between gap-4 cursor-pointer"
+                  >
+                    <div className="flex items-start sm:items-center gap-3.5">
+                      <div className="p-3 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 shrink-0">
+                        <QrCode className="w-7 h-7" />
                       </div>
-                      <p className="text-xs text-zinc-400 mt-3 leading-relaxed">
-                        Gera QR Code e código PIX Copia e Cola na hora. Liberação automática em segundos.
-                      </p>
-                      <div className="mt-4 inline-flex items-center gap-2 text-xs font-mono-code font-bold text-emerald-400">
-                        {submitting && state.paymentMethod === "pix" ? (
-                          <>
-                            <Loader2 className="w-4 h-4 animate-spin" /> Gerando cobrança PIX...
-                          </>
-                        ) : (
-                          <>
-                            [GERAR QR CODE PIX] <ChevronRight className="w-4 h-4" />
-                          </>
-                        )}
+                      <div>
+                        <span className="inline-block text-[10px] font-mono-code uppercase px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 mb-1">
+                          PIX INSTANTÂNEO // LIBERAÇÃO AUTOMÁTICA
+                        </span>
+                        <h4 className="text-base sm:text-lg font-bold text-white">
+                          Pagar {signalFormatted} via PIX
+                        </h4>
+                        <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
+                          Gera QR Code e código PIX Copia e Cola na hora. Confirmação automática em segundos.
+                        </p>
                       </div>
-                    </button>
-                  )}
-
-                  {cardEnabled && (
-                    <button
-                      type="button"
-                      disabled={submitting}
-                      onClick={() => void handleGeneratePayment("card")}
-                      className={`p-4 sm:p-5 rounded-xl border text-left transition flex flex-col justify-between cursor-pointer ${
-                        state.paymentMethod === "card"
-                          ? "border-purple-500 bg-purple-950/25 shadow-[0_0_25px_rgba(168,85,247,0.18)]"
-                          : "border-zinc-800 bg-zinc-900/50 hover:border-zinc-700"
-                      }`}
-                    >
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="flex items-center gap-3">
-                          <div className="p-2.5 rounded-xl bg-purple-500/20 text-purple-400 border border-purple-500/30">
-                            <CreditCard className="w-6 h-6" />
-                          </div>
-                          <div>
-                            <span className="inline-block text-[10px] font-mono-code uppercase px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 mb-1">
-                              MERCADO PAGO // CHECKOUT SEGURO
-                            </span>
-                            <h4 className="text-sm sm:text-base font-bold text-white">
-                              Pagar {signalFormatted} com Cartão
-                            </h4>
-                          </div>
-                        </div>
-                      </div>
-                      <p className="text-xs text-zinc-400 mt-3 leading-relaxed">
-                        Pagamento seguro via Cartão de Crédito pelo Checkout Pro do Mercado Pago.
-                      </p>
-                      <div className="mt-4 inline-flex items-center gap-2 text-xs font-mono-code font-bold text-purple-300">
-                        {submitting && state.paymentMethod === "card" ? (
-                          <>
-                            <Loader2 className="w-4 h-4 animate-spin" /> Abrindo Mercado Pago...
-                          </>
-                        ) : (
-                          <>
-                            [PAGAR COM CARTÃO] <ExternalLink className="w-4 h-4" />
-                          </>
-                        )}
-                      </div>
-                    </button>
-                  )}
-                </div>
+                    </div>
+                    <div className="shrink-0 min-h-[46px] px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white inline-flex items-center justify-center gap-2 text-xs sm:text-sm font-mono-code font-bold shadow-[0_0_20px_rgba(16,185,129,0.35)]">
+                      {submitting ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin" /> Gerando PIX...
+                        </>
+                      ) : (
+                        <>
+                          GERAR QR CODE PIX <ChevronRight className="w-4 h-4" />
+                        </>
+                      )}
+                    </div>
+                  </button>
+                )}
 
                 {/* Painel do QR Code PIX gerado */}
                 {checkoutData && checkoutData.method === "pix" && checkoutData.qrCode && (

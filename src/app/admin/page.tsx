@@ -64,8 +64,8 @@ interface ApplicationRow {
     dailyAvailability?: string;
   } | null;
   payment_status: "pending" | "paid" | "failed" | "expired" | "review";
-  payment_method: "pix" | "card" | null;
-  payment_provider: "mercosulpay" | "mercadopago" | null;
+  payment_method: "pix" | null;
+  payment_provider: "mercosulpay" | null;
   payment_ref: string | null;
   payment_amount_cents: number;
   paid_at: string | null;
@@ -84,10 +84,10 @@ interface ApplicationRow {
 interface PaymentRow {
   id: string;
   application_id: string;
-  provider: "mercosulpay" | "mercadopago";
+  provider: "mercosulpay";
   provider_ref: string;
   external_id: string | null;
-  method: "pix" | "card";
+  method: "pix";
   amount_cents: number;
   status: "pending" | "paid" | "failed" | "expired" | "review";
   qr_code: string | null;
@@ -696,11 +696,7 @@ export default function FsocietyAdminPage() {
             </div>
             <div className="text-[11px] text-zinc-400 flex flex-wrap items-center gap-x-2 gap-y-0.5 font-mono-code">
               <span className="text-emerald-300">
-                PIX: {brl(metrics?.revenuePixCents ?? 0)}
-              </span>
-              <span>•</span>
-              <span className="text-purple-300">
-                Cartão: {brl(metrics?.revenueCardCents ?? 0)}
+                Entradas via PIX (MercosulPay)
               </span>
             </div>
           </div>
@@ -766,7 +762,7 @@ export default function FsocietyAdminPage() {
                   void runAdminAction(
                     { action: "admin_sync_payments" },
                     "sync",
-                    "Pagamentos pendentes verificados junto ao MercosulPay e Mercado Pago!",
+                    "Pagamentos PIX pendentes verificados junto ao MercosulPay!",
                   )
                 }
                 className="flex-1 min-h-[38px] px-2.5 py-1.5 rounded-lg bg-purple-600/20 hover:bg-purple-600/35 border border-purple-500/40 text-purple-200 text-[11px] font-mono-code inline-flex items-center justify-center gap-1.5 cursor-pointer"
@@ -776,7 +772,7 @@ export default function FsocietyAdminPage() {
                 ) : (
                   <RefreshCw className="w-3.5 h-3.5" />
                 )}
-                Sincronizar PIX/MP
+                Sincronizar PIX
               </button>
               <button
                 type="button"
@@ -1449,10 +1445,10 @@ export default function FsocietyAdminPage() {
             <div className="rounded-2xl border border-zinc-800 bg-[#090912]/90 p-4 flex flex-wrap items-center justify-between gap-3">
               <div>
                 <h3 className="text-sm sm:text-base font-bold text-white">
-                  Histórico de Cobranças PIX (MercosulPay) & Cartão (Mercado Pago)
+                  Histórico de Cobranças PIX (MercosulPay)
                 </h3>
                 <p className="text-xs text-zinc-400">
-                  Todas as tentativas de pagamento geradas no Wizard de Recrutamento.
+                  Todas as cobranças PIX geradas no Wizard de Recrutamento.
                 </p>
               </div>
               <button
@@ -1462,7 +1458,7 @@ export default function FsocietyAdminPage() {
                   void runAdminAction(
                     { action: "admin_sync_payments" },
                     "sync-tab",
-                    "Sincronização concluída com MercosulPay e Mercado Pago!",
+                    "Sincronização concluída com MercosulPay!",
                   )
                 }
                 className="min-h-[40px] px-4 py-2 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/40 text-emerald-300 text-xs font-mono-code font-semibold inline-flex items-center gap-2 cursor-pointer"
@@ -1494,9 +1490,7 @@ export default function FsocietyAdminPage() {
                             {brl(p.amount_cents)}
                           </span>
                           <span className="text-[11px] font-mono-code px-2 py-0.5 rounded bg-zinc-900 border border-zinc-700 text-zinc-300">
-                            {p.method === "pix"
-                              ? "PIX • MercosulPay"
-                              : "CARTÃO • Mercado Pago"}
+                            PIX • MercosulPay
                           </span>
                           <span
                             className={`text-[10px] font-mono-code font-bold px-2 py-0.5 rounded border ${badge.badgeClass}`}
@@ -1584,30 +1578,24 @@ export default function FsocietyAdminPage() {
                 />
               </div>
 
-              {/* Métodos de Pagamento */}
+              {/* Método de Pagamento PIX */}
               <div className="p-4 rounded-xl border border-zinc-800 bg-zinc-950/70 flex items-center justify-between gap-4">
-                <label className="flex items-center gap-2 text-xs sm:text-sm text-zinc-200 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={cfgDraft.pixEnabled}
-                    onChange={(e) =>
-                      setCfgDraft({ ...cfgDraft, pixEnabled: e.target.checked })
-                    }
-                    className="w-4 h-4 accent-emerald-500"
-                  />
-                  PIX (MercosulPay)
-                </label>
-                <label className="flex items-center gap-2 text-xs sm:text-sm text-zinc-200 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={cfgDraft.cardEnabled}
-                    onChange={(e) =>
-                      setCfgDraft({ ...cfgDraft, cardEnabled: e.target.checked })
-                    }
-                    className="w-4 h-4 accent-purple-500"
-                  />
-                  Cartão (Mercado Pago)
-                </label>
+                <div>
+                  <strong className="text-sm text-white block">
+                    Pagamento via PIX (MercosulPay)
+                  </strong>
+                  <span className="text-xs text-zinc-400">
+                    Geração automática de QR Code e Copia e Cola
+                  </span>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={cfgDraft.pixEnabled}
+                  onChange={(e) =>
+                    setCfgDraft({ ...cfgDraft, pixEnabled: e.target.checked })
+                  }
+                  className="w-5 h-5 accent-emerald-500"
+                />
               </div>
 
               {/* Valor do Sinal */}

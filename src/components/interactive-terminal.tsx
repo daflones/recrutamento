@@ -25,7 +25,7 @@ const COMMAND_RESPONSES: Record<string, string[]> = {
     "• Vagas totais: APENAS 3 INTEGRANTES",
     "• Encerramento das inscrições: 10/11 às 23:59",
     "• Duração da operação: 30 dias intensivos",
-    "• Sinal de comprometimento: R$ 10,00 (PIX MercosulPay ou Cartão Mercado Pago)",
+    "• Sinal de comprometimento: R$ 10,00 via PIX instantâneo",
   ],
   stack: [
     "[PIPELINE DE 30 DIAS — DO ZERO AO SAAS]",
@@ -34,7 +34,7 @@ const COMMAND_RESPONSES: Record<string, string[]> = {
     "03. Backend, APIs, Edge Functions & Banco de Dados (Supabase/Postgres)",
     "04. Desenvolvimento Full-Stack assistido por IA de ponta",
     "05. UI/UX, Identidade Visual & Alta Conversão",
-    "06. Gateways de Pagamento (PIX & Cartão) e Monetização",
+    "06. Integração de Gateways de Pagamento, Webhooks e Monetização",
     "07. Lançamento, Tráfego, Marketing & Aquisição de Clientes",
   ],
   mrrobot: [

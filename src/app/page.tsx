@@ -80,7 +80,7 @@ const PRACTICAL_STAGES = [
     icon: CreditCard,
     code: "STAGE_06",
     title: "Integração de pagamentos e monetização",
-    desc: "Checkout transparente e recorrente com PIX e Cartão, conciliação automática via webhooks e liberação de acesso.",
+    desc: "Checkout transparente via PIX, conciliação automática via webhooks em tempo real e liberação de acesso.",
   },
   {
     icon: Rocket,
@@ -722,7 +722,7 @@ export default function FsocietyRecruitmentPage() {
               </h2>
 
               <p className="text-zinc-300 text-sm sm:text-base leading-relaxed">
-                Eu já opero aplicações SaaS completas em produção — com infraestrutura real, agentes de Inteligência Artificial, gateways de pagamento (PIX & Cartão), banco de dados seguro e automação.
+                Eu já opero aplicações SaaS completas em produção — com infraestrutura real, agentes de Inteligência Artificial, gateways de pagamento via PIX, banco de dados seguro e automação.
               </p>
 
               <p className="text-zinc-300 text-sm sm:text-base leading-relaxed">
